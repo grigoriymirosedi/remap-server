@@ -1,6 +1,11 @@
 package com.example
 
-import com.example.plugins.*
+import com.example.database.DatabaseFactory
+import com.example.database.dao.dao
+import com.example.plugins.configureDatabases
+import com.example.plugins.configureRouting
+import com.example.plugins.configureSerialization
+import com.example.routes.configureRecyclePointRouting
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -11,8 +16,8 @@ fun main() {
 }
 
 fun Application.module() {
+    DatabaseFactory.init()
     configureSerialization()
-    configureDatabases()
+    configureRecyclePointRouting()
     configureRouting()
-
 }
