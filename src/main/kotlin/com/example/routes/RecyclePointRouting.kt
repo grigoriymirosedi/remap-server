@@ -7,8 +7,8 @@ import io.ktor.server.routing.*
 
 fun Application.configureRecyclePointRouting() {
     routing {
-        get("/recycle-points") {
-            call.respond(mapOf("recycle_points" to dao.allRecyclePoints()))
+        get("/v1/recycle-points") {
+            call.respond(dao.allRecyclePoints())
         }
     }
 }
