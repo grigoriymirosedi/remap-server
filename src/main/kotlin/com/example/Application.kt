@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
         password = System.getenv("POSTGRES_PASSWORD"),
     )
 
-    embeddedServer(Netty, module = Application::module)
+    embeddedServer(Netty, port = System.getenv("PORT").toInt(),module = Application::module)
         .start(wait = true)
 }
 
