@@ -16,10 +16,8 @@ fun main(args: Array<String>) {
         password = System.getenv("POSTGRES_PASSWORD"),
     )
 
-    EngineMain.main(args)
-
-//    embeddedServer(Netty, port = 8080, module = Application::module)
-//        .start(wait = true)
+    embeddedServer(Netty, port = 8080, module = Application::module)
+        .start(wait = true)
 }
 
 fun Application.module() {
