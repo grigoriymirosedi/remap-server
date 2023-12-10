@@ -1,22 +1,26 @@
 package com.example
 
-import com.example.database.DatabaseFactory
-import com.example.database.dao.dao
-import com.example.plugins.configureDatabases
 import com.example.plugins.configureRouting
 import com.example.plugins.configureSerialization
-import com.example.routes.configureRecyclePointRouting
+import com.example.features.recycle_point.configureRecyclePointRouting
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import org.jetbrains.exposed.sql.Database
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "192.168.249.98", module = Application::module)
+    Database.connect(
+        url = System.getenv("DATABASE_CONNECTION_STRING"),
+        driver = System.getenv("JDBC_DRIVER"),
+        user = System.getenv("POSTGRES_USER"),
+        password = System.getenv("POSTGRES_PASSWORD"),
+    )
+
+    embeddedServer(Netty, port = 8080, host = "127.0.0.1", module = Application::module)
         .start(wait = true)
 }
 
 fun Application.module() {
-    DatabaseFactory.init()
     configureSerialization()
     configureRecyclePointRouting()
     configureRouting()
