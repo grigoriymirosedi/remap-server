@@ -16,7 +16,7 @@ fun main() {
         password = System.getenv("POSTGRES_PASSWORD"),
     )
 
-    embeddedServer(Netty, port = 8080, host = "127.0.0.1", module = Application::module)
+    embeddedServer(Netty, port = 10000, host = "https://remap-vfen.onrender.com", module = Application::module)
         .start(wait = true)
 }
 
