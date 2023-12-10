@@ -8,7 +8,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.jetbrains.exposed.sql.Database
 
-fun main() {
+fun main(args: Array<String>) {
     Database.connect(
         url = System.getenv("DATABASE_CONNECTION_STRING"),
         driver = System.getenv("JDBC_DRIVER"),
@@ -16,8 +16,10 @@ fun main() {
         password = System.getenv("POSTGRES_PASSWORD"),
     )
 
-    embeddedServer(Netty, port = 10000, host = "https://remap-vfen.onrender.com", module = Application::module)
-        .start(wait = true)
+    EngineMain.main(args)
+
+//    embeddedServer(Netty, port = 8080, module = Application::module)
+//        .start(wait = true)
 }
 
 fun Application.module() {
