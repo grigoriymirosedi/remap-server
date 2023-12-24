@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object RecyclePoint: Table("recycle_points") {
-    val id = RecyclePoint.text("id")
+    val id = RecyclePoint.text("recycle_point_id")
     val name = RecyclePoint.text("name")
     val image = RecyclePoint.text("image").nullable()
     val description = RecyclePoint.text("description")
