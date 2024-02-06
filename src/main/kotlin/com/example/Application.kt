@@ -1,6 +1,6 @@
 package com.example
 
-import com.example.plugins.configureRouting
+import com.example.features.event.configureEventRouting
 import com.example.plugins.configureSerialization
 import com.example.features.recycle_point.configureRecyclePointRouting
 import io.ktor.server.application.*
@@ -23,5 +23,5 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureSerialization()
     configureRecyclePointRouting()
-    configureRouting()
+    configureEventRouting()
 }
