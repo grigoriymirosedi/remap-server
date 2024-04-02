@@ -18,6 +18,7 @@ data class RecyclePointDTO(
 
 fun RecyclePointDTO.toRecyclePointResponse(): RecyclePointResponse =
     RecyclePointResponse(
+        id = id,
         name = name,
         image = image,
         description = description,
