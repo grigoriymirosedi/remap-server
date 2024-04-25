@@ -8,7 +8,7 @@ fun Application.configureRecyclePointRouting() {
         get("/v1/recycle-points") {
             RecyclePointController(call).fetchAllRecyclePoint()
         }
-        post("/v1/recycle-points{categoryId}") {
+        post("/v1/recycle-points/{categoryId}") {
             val category = call.parameters["categoryId"] ?: "-1"
             RecyclePointController(call).createRecyclePoint(categoryId = category)
         }
