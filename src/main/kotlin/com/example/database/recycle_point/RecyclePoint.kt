@@ -34,7 +34,7 @@ object RecyclePoint: Table("recycle_points") {
 
             categoryId.forEach{ categoryId ->
                 RecyclePointCategory.insert {
-                    it[this.recyclePointId] = recyclePointId
+                    it[this.recyclePointId] = recyclePointDTO.id
                     it[this.categoryId] = categoryId
                 }
             }
