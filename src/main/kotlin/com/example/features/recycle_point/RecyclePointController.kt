@@ -13,7 +13,7 @@ class RecyclePointController(private val call: ApplicationCall) {
         call.respond(recyclePoints)
     }
 
-    suspend fun createRecyclePoint(categoryId: String) {
+    suspend fun createRecyclePoint(categoryId: List<String>) {
         val recyclePointReceive = call.receive<RecyclePointReceive>()
         val recyclePoint = recyclePointReceive.toRecyclePointDTO()
         RecyclePoint.insert(recyclePointDTO = recyclePoint, categoryId = categoryId)

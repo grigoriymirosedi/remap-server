@@ -18,7 +18,7 @@ object RecyclePoint: Table("recycle_points") {
     val working_hours = RecyclePoint.text("working_hours")
 
 
-    fun insert(recyclePointDTO: RecyclePointDTO, categoryId: String) {
+    fun insert(recyclePointDTO: RecyclePointDTO, categoryId: List<String>) {
         transaction {
             RecyclePoint.insert {
                 it[id] = recyclePointDTO.id
@@ -32,10 +32,17 @@ object RecyclePoint: Table("recycle_points") {
                 it[working_hours] = recyclePointDTO.working_hours
             }
 
-            RecyclePointCategory.insert {
-                it[this.recyclePointId] = recyclePointDTO.id
-                it[this.categoryId] = categoryId
+            categoryId.forEach{ categoryId ->
+                RecyclePointCategory.insert {
+                    it[this.recyclePointId] = recyclePointId
+                    it[this.categoryId] = categoryId
+                }
             }
+
+//            RecyclePointCategory.insert {
+//                it[this.recyclePointId] = recyclePointDTO.id
+//                it[this.categoryId] = categoryId
+//            }
 
         }
     }

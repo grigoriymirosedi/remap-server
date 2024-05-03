@@ -1,6 +1,9 @@
 package com.example.features.recycle_point
 
+import com.example.utils.convertToCategoryId
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.configureRecyclePointRouting() {
@@ -9,8 +12,13 @@ fun Application.configureRecyclePointRouting() {
             RecyclePointController(call).fetchAllRecyclePoint()
         }
         post("/v1/recycle-points") {
-            val categoryId = call.parameters["categoryId"] ?: "-1"
-            RecyclePointController(call).createRecyclePoint(categoryId = categoryId)
+            val categoryType: List<String> = call.request.queryParameters.getAll("categoryType") ?: emptyList()
+            if(!categoryType.isEmpty()) {
+                val categoryId = categoryType.convertToCategoryId()
+                RecyclePointController(call).createRecyclePoint(categoryId = categoryId)
+            } else {
+                call.respondText("Missing categoryType value!", status = HttpStatusCode.NoContent)
+            }
         }
     }
 }
