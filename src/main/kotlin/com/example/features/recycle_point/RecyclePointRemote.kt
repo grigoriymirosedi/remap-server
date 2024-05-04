@@ -31,6 +31,7 @@ fun RecyclePointReceive.toRecyclePointDTO(): RecyclePointDTO =
 
 @Serializable
 data class RecyclePointResponse(
+    val id: String,
     val name: String,
     val image: String?,
     val description: String,
