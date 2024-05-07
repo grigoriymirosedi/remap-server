@@ -1,12 +1,14 @@
 package com.example.database.recycle_point
 
 import com.example.database.recycle_point_category.RecyclePointCategory
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import com.example.features.recycle_point.RecyclePointController
+import com.example.features.recycle_point.RecyclePointReceive
+import com.example.features.recycle_point.RecyclePointResponse
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object RecyclePoint: Table("recycle_points") {
+object RecyclePoint : Table("recycle_points") {
     val id = RecyclePoint.text("recycle_point_id")
     val name = RecyclePoint.text("name")
     val image = RecyclePoint.text("image").nullable()
@@ -32,7 +34,7 @@ object RecyclePoint: Table("recycle_points") {
                 it[working_hours] = recyclePointDTO.working_hours
             }
 
-            categoryId.forEach{ categoryId ->
+            categoryId.forEach { categoryId ->
                 RecyclePointCategory.insert {
                     it[this.recyclePointId] = recyclePointDTO.id
                     it[this.categoryId] = categoryId
@@ -47,22 +49,26 @@ object RecyclePoint: Table("recycle_points") {
         }
     }
 
-    fun fetchAll(): List<RecyclePointDTO> {
+    fun fetchAll(categoryId: List<String>): List<RecyclePointResponse> {
         return try {
             transaction {
-                RecyclePoint.selectAll().toList()
-                    .map {
-                        RecyclePointDTO(
-                            id = it[RecyclePoint.id],
-                            name = it[name],
-                            image = it[image],
-                            description = it[description],
-                            contacts = it[contacts],
-                            latitude = it[latitude],
-                            longitude = it[longitude],
-                            address = it[address],
-                            working_hours = it[working_hours]
+                RecyclePoint.join(RecyclePointCategory, JoinType.INNER, RecyclePoint.id, RecyclePointCategory.recyclePointId)
+                    .select { RecyclePointCategory.categoryId inList categoryId }
+                    .mapNotNull { row ->
+                        val categories = row[RecyclePointCategory.categoryId]?.let { listOf(it) }?: emptyList()
+                        val response = RecyclePointResponse(
+                            id = row[RecyclePoint.id].toString(),
+                            name = row[RecyclePoint.name],
+                            image = row[RecyclePoint.image],
+                            description = row[RecyclePoint.description],
+                            contacts = row[RecyclePoint.contacts],
+                            latitude = row[RecyclePoint.latitude],
+                            longitude = row[RecyclePoint.longitude],
+                            address = row[RecyclePoint.address],
+                            working_hours = row[RecyclePoint.working_hours],
+                            categories = categories
                         )
+                        response
                     }
             }
         } catch (e: Exception) {

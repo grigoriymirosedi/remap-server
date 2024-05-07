@@ -39,5 +39,6 @@ data class RecyclePointResponse(
     val latitude: Double,
     val longitude: Double,
     val address: String,
-    val working_hours: String
+    val working_hours: String,
+    val categories: List<String>
 )

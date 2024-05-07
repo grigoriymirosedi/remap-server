@@ -20,10 +20,22 @@ fun String.toCategoryId(): String {
 }
 
 fun String.toCategoryType(): String {
-    PlaceMarkCategory.values().forEach {
-        this.replace(it.categoryId, it.categoryType)
+    return when(this) {
+        PlaceMarkCategory.PAPER.categoryId -> PlaceMarkCategory.PAPER.categoryType
+        PlaceMarkCategory.PLASTIC.categoryId -> PlaceMarkCategory.PLASTIC.categoryType
+        PlaceMarkCategory.GLASS.categoryId -> PlaceMarkCategory.GLASS.categoryType
+        PlaceMarkCategory.METAL.categoryId -> PlaceMarkCategory.METAL.categoryType
+        PlaceMarkCategory.TETRA_PACK.categoryId -> PlaceMarkCategory.TETRA_PACK.categoryType
+        PlaceMarkCategory.CLOTHES.categoryId -> PlaceMarkCategory.CLOTHES.categoryType
+        PlaceMarkCategory.LAMPS.categoryId -> PlaceMarkCategory.LAMPS.categoryType
+        PlaceMarkCategory.CAPS.categoryId -> PlaceMarkCategory.CAPS.categoryType
+        PlaceMarkCategory.TECH.categoryId -> PlaceMarkCategory.TECH.categoryType
+        PlaceMarkCategory.BATTERIES.categoryId -> PlaceMarkCategory.BATTERIES.categoryType
+        PlaceMarkCategory.TIRES.categoryId -> PlaceMarkCategory.TIRES.categoryType
+        PlaceMarkCategory.DANGEROUS.categoryId -> PlaceMarkCategory.DANGEROUS.categoryType
+        PlaceMarkCategory.OTHER.categoryId -> PlaceMarkCategory.OTHER.categoryType
+        else -> PlaceMarkCategory.OTHER.categoryType
     }
-    return this
 }
 
 fun List<String>.convertToCategoryId(): List<String> {
