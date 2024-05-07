@@ -54,8 +54,9 @@ object RecyclePoint : Table("recycle_points") {
             transaction {
                 RecyclePoint.join(RecyclePointCategory, JoinType.RIGHT, RecyclePoint.id, RecyclePointCategory.recyclePointId)
                     .select { RecyclePointCategory.categoryId inList categoryId }
+                    .groupBy(RecyclePoint.id)
                     .mapNotNull { row ->
-                        val categories = row[RecyclePointCategory.categoryId]?.let { listOf(it) }?: emptyList()
+                        val categories = row[RecyclePointCategory.categoryId].map { it.toString() }.toList()
                         val response = RecyclePointResponse(
                             id = row[RecyclePoint.id].toString(),
                             name = row[RecyclePoint.name],
