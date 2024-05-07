@@ -52,7 +52,7 @@ object RecyclePoint : Table("recycle_points") {
     fun fetchAll(categoryId: List<String>): List<RecyclePointResponse> {
         return try {
             transaction {
-                RecyclePoint.join(RecyclePointCategory, JoinType.INNER, RecyclePoint.id, RecyclePointCategory.recyclePointId)
+                RecyclePoint.join(RecyclePointCategory, JoinType.RIGHT, RecyclePoint.id, RecyclePointCategory.recyclePointId)
                     .select { RecyclePointCategory.categoryId inList categoryId }
                     .mapNotNull { row ->
                         val categories = row[RecyclePointCategory.categoryId]?.let { listOf(it) }?: emptyList()
