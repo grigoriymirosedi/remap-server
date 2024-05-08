@@ -12,12 +12,8 @@ fun Application.configureRecyclePointRouting() {
     routing {
         get("/v1/recycle-points") {
             val categoryType: List<String>? = call.request.queryParameters.getAll("categoryType")
-            if(!categoryType.isNullOrEmpty()) {
-                val categoryId = categoryType.map { it.toCategoryId() }
-                RecyclePointController(call).fetchAllRecyclePoint(categoryId = categoryId)
-            } else {
-                call.respondText("Missing categoryType value!", status = HttpStatusCode.NoContent)
-            }
+            val categoryId = categoryType?.map { it.toCategoryId() }
+            RecyclePointController(call).fetchAllRecyclePoint(categoryId = categoryId)
         }
         post("/v1/recycle-points") {
             val categoryType: List<String>? = call.request.queryParameters.getAll("categoryType")

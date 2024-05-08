@@ -7,8 +7,8 @@ import io.ktor.server.response.*
 
 class RecyclePointController(private val call: ApplicationCall) {
 
-    suspend fun fetchAllRecyclePoint(categoryId: List<String>) {
-        val recyclePoints = RecyclePoint.fetchAll(categoryId = categoryId)
+    suspend fun fetchAllRecyclePoint(categoryId: List<String>?) {
+        val recyclePoints = RecyclePoint.fetchAllByCategories(categoryId = categoryId)
         call.respond(recyclePoints)
     }
 
