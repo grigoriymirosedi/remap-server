@@ -1,12 +1,15 @@
 package com.example.database.recycle_point
 
 import com.example.database.recycle_point_category.RecyclePointCategory
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import com.example.features.recycle_point.RecyclePointController
+import com.example.features.recycle_point.RecyclePointReceive
+import com.example.features.recycle_point.RecyclePointResponse
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object RecyclePoint: Table("recycle_points") {
+
+object RecyclePoint : Table("recycle_points") {
     val id = RecyclePoint.text("recycle_point_id")
     val name = RecyclePoint.text("name")
     val image = RecyclePoint.text("image").nullable()
@@ -32,7 +35,7 @@ object RecyclePoint: Table("recycle_points") {
                 it[working_hours] = recyclePointDTO.working_hours
             }
 
-            categoryId.forEach{ categoryId ->
+            categoryId.forEach { categoryId ->
                 RecyclePointCategory.insert {
                     it[this.recyclePointId] = recyclePointDTO.id
                     it[this.categoryId] = categoryId
@@ -47,21 +50,47 @@ object RecyclePoint: Table("recycle_points") {
         }
     }
 
-    fun fetchAll(): List<RecyclePointDTO> {
+    fun fetchAllByCategories(categoryId: List<String>?): List<RecyclePointResponse> {
         return try {
             transaction {
-                RecyclePoint.selectAll().toList()
+                val query = (RecyclePoint innerJoin RecyclePointCategory)
+                    .slice(
+                        RecyclePoint.id,
+                        RecyclePoint.name,
+                        RecyclePoint.image,
+                        RecyclePoint.description,
+                        RecyclePoint.contacts,
+                        RecyclePoint.latitude,
+                        RecyclePoint.longitude,
+                        RecyclePoint.address,
+                        RecyclePoint.working_hours
+                    )
+
+                val filteredQuery = if (categoryId != null) {
+                    query.select { RecyclePointCategory.categoryId inList categoryId }
+                } else {
+                    query.selectAll()
+                }
+
+                filteredQuery.groupBy(RecyclePoint.id)
                     .map {
-                        RecyclePointDTO(
+                        val id = it[RecyclePoint.id]
+                        val categories = RecyclePointCategory
+                            .select { RecyclePointCategory.recyclePointId eq id }
+                            .map { it[RecyclePointCategory.categoryId] }
+                            .toList()
+
+                        RecyclePointResponse(
                             id = it[RecyclePoint.id],
-                            name = it[name],
-                            image = it[image],
-                            description = it[description],
-                            contacts = it[contacts],
-                            latitude = it[latitude],
-                            longitude = it[longitude],
-                            address = it[address],
-                            working_hours = it[working_hours]
+                            name = it[RecyclePoint.name],
+                            image = it[RecyclePoint.image],
+                            description = it[RecyclePoint.description],
+                            contacts = it[RecyclePoint.contacts],
+                            latitude = it[RecyclePoint.latitude],
+                            longitude = it[RecyclePoint.longitude],
+                            address = it[RecyclePoint.address],
+                            working_hours = it[RecyclePoint.working_hours],
+                            categories = categories
                         )
                     }
             }
