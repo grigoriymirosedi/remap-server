@@ -7,6 +7,7 @@ import com.example.database.event.EventDTO
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.UUID
 
 @Serializable
 data class EventResponse(
@@ -24,7 +25,6 @@ data class EventResponse(
 
 @Serializable
 data class EventReceive(
-    val id: String,
     val title: String,
     val description: String,
     val photo_url: String,
@@ -37,7 +37,7 @@ data class EventReceive(
 )
 
 fun EventReceive.toEventDTO(): EventDTO = EventDTO(
-    id = id,
+    id = UUID.randomUUID().toString(),
     title = title,
     description = description,
     photo_url = photo_url,
