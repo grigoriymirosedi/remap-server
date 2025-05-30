@@ -2,6 +2,7 @@ package com.example.features.recycle_point
 
 import com.example.database.recycle_point.RecyclePoint
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 

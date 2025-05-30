@@ -1,38 +1,45 @@
 package com.example.database.recycle_point
 
+import com.example.database.collected_items.CollectedItems
+import com.example.database.event.Event
 import com.example.database.recycle_point_category.RecyclePointCategory
-import com.example.features.recycle_point.RecyclePointController
-import com.example.features.recycle_point.RecyclePointReceive
+import com.example.database.tips.Tips
+import com.example.database.user.User
+import com.example.features.event.EventResponse
+import com.example.features.recycle_point.AllDataResponse
 import com.example.features.recycle_point.RecyclePointResponse
+import com.example.features.user.CollectedItem
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.transactions.transaction
 
-
 object RecyclePoint : Table("recycle_points") {
-    val id = RecyclePoint.text("recycle_point_id")
+    val recycle_point_id = RecyclePoint.text("recycle_point_id")
     val name = RecyclePoint.text("name")
-    val image = RecyclePoint.text("image").nullable()
     val description = RecyclePoint.text("description")
-    val contacts = RecyclePoint.text("contacts")
+    val address = RecyclePoint.text("address")
+    val location_hint = RecyclePoint.text("location_hint")
     val latitude = RecyclePoint.double("latitude")
     val longitude = RecyclePoint.double("longitude")
-    val address = RecyclePoint.text("address")
     val working_hours = RecyclePoint.text("working_hours")
+    val phone_number = RecyclePoint.text("phone_number")
+    val imageUrl = RecyclePoint.text("image_url").nullable()
+    val moderation_status = RecyclePoint.byte("moderation_status")
 
 
     fun insert(recyclePointDTO: RecyclePointDTO, categoryId: List<String>) {
         transaction {
             RecyclePoint.insert {
-                it[id] = recyclePointDTO.id
+                it[recycle_point_id] = recyclePointDTO.id
                 it[name] = recyclePointDTO.name
-                it[image] = recyclePointDTO.image
                 it[description] = recyclePointDTO.description
-                it[contacts] = recyclePointDTO.contacts
+                it[address] = recyclePointDTO.address
+                it[location_hint] = recyclePointDTO.locationHint
                 it[latitude] = recyclePointDTO.latitude
                 it[longitude] = recyclePointDTO.longitude
-                it[address] = recyclePointDTO.address
                 it[working_hours] = recyclePointDTO.working_hours
+                it[phone_number] = recyclePointDTO.phone_number
+                it[imageUrl] = recyclePointDTO.imageUrl
+                it[moderation_status] = recyclePointDTO.moderationStatus.toByte()
             }
 
             categoryId.forEach { categoryId ->
@@ -41,12 +48,6 @@ object RecyclePoint : Table("recycle_points") {
                     it[this.categoryId] = categoryId
                 }
             }
-
-//            RecyclePointCategory.insert {
-//                it[this.recyclePointId] = recyclePointDTO.id
-//                it[this.categoryId] = categoryId
-//            }
-
         }
     }
 
@@ -55,15 +56,17 @@ object RecyclePoint : Table("recycle_points") {
             transaction {
                 val query = (RecyclePoint innerJoin RecyclePointCategory)
                     .slice(
-                        RecyclePoint.id,
+                        RecyclePoint.recycle_point_id,
                         RecyclePoint.name,
-                        RecyclePoint.image,
                         RecyclePoint.description,
-                        RecyclePoint.contacts,
+                        RecyclePoint.address,
+                        RecyclePoint.location_hint,
                         RecyclePoint.latitude,
                         RecyclePoint.longitude,
-                        RecyclePoint.address,
-                        RecyclePoint.working_hours
+                        RecyclePoint.working_hours,
+                        RecyclePoint.phone_number,
+                        RecyclePoint.imageUrl,
+                        RecyclePoint.moderation_status
                     )
 
                 val filteredQuery = if (categoryId != null) {
@@ -72,25 +75,27 @@ object RecyclePoint : Table("recycle_points") {
                     query.selectAll()
                 }
 
-                filteredQuery.groupBy(RecyclePoint.id)
+                filteredQuery.groupBy(RecyclePoint.recycle_point_id)
                     .map {
-                        val id = it[RecyclePoint.id]
+                        val id = it[RecyclePoint.recycle_point_id]
                         val categories = RecyclePointCategory
                             .select { RecyclePointCategory.recyclePointId eq id }
                             .map { it[RecyclePointCategory.categoryId] }
                             .toList()
 
                         RecyclePointResponse(
-                            id = it[RecyclePoint.id],
+                            id = it[RecyclePoint.recycle_point_id],
                             name = it[RecyclePoint.name],
-                            image = it[RecyclePoint.image],
                             description = it[RecyclePoint.description],
-                            contacts = it[RecyclePoint.contacts],
+                            address = it[RecyclePoint.address],
+                            locationHint = it[RecyclePoint.location_hint],
                             latitude = it[RecyclePoint.latitude],
                             longitude = it[RecyclePoint.longitude],
-                            address = it[RecyclePoint.address],
                             working_hours = it[RecyclePoint.working_hours],
-                            categories = categories
+                            phoneNumber = it[RecyclePoint.phone_number],
+                            imageUrl = it[RecyclePoint.imageUrl] ?: "",
+                            categories = categories,
+                            moderationStatus = it[RecyclePoint.moderation_status].toInt()
                         )
                     }
             }
@@ -99,12 +104,4 @@ object RecyclePoint : Table("recycle_points") {
             emptyList()
         }
     }
-
-//    fun fetchRecycePointsByCategory(category: String) {
-//        return try {
-//            transaction {
-//                RecyclePoint
-//            }
-//        }
-//    }
 }
