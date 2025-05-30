@@ -7,11 +7,13 @@ import kotlinx.serialization.Serializable
 data class RecyclePointDTO(
     val id: String,
     val name: String,
-    val image: String?,
     val description: String,
-    val contacts: String,
+    val address: String,
+    val locationHint: String,
     val latitude: Double,
     val longitude: Double,
-    val address: String,
     val working_hours: String,
+    val phone_number: String,
+    val imageUrl: String,
+    val moderationStatus: Int
 )

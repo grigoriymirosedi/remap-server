@@ -11,11 +11,10 @@ object Event : Table("events") {
     val id = Event.text("event_id")
     val title = Event.text("title")
     val description = Event.text("description")
-    val photo_url = Event.text("photo_url")
-    val event_date = Event.date("event_date")
-    val event_start_time = Event.time("event_start_time")
-    val event_location = Event.text("event_location")
-    val event_color = Event.varchar("event_color", 7)
+    val image_url = Event.text("image_url")
+    val date = Event.date("date")
+    val time = Event.time("time")
+    val location = Event.text("location")
 
     fun insert(eventDTO: EventDTO) {
         transaction {
@@ -23,11 +22,10 @@ object Event : Table("events") {
                 it[id] = eventDTO.id
                 it[title] = eventDTO.title
                 it[description] = eventDTO.description
-                it[photo_url] = eventDTO.photo_url
-                it[event_date] = eventDTO.event_date
-                it[event_start_time] = eventDTO.event_start_time
-                it[event_location] = eventDTO.event_location
-                it[event_color] = eventDTO.event_color
+                it[image_url] = eventDTO.photo_url
+                it[date] = eventDTO.event_date
+                it[time] = eventDTO.event_start_time
+                it[location] = eventDTO.event_location
             }
         }
     }
@@ -41,11 +39,10 @@ object Event : Table("events") {
                             id = it[Event.id],
                             title = it[Event.title],
                             description = it[Event.description],
-                            photo_url = it[Event.photo_url],
-                            event_date = it[Event.event_date],
-                            event_start_time = it[Event.event_start_time],
-                            event_location = it[Event.event_location],
-                            event_color = it[Event.event_color]
+                            photo_url = it[Event.image_url],
+                            event_date = it[Event.date],
+                            event_start_time = it[Event.time],
+                            event_location = it[Event.location],
                         )
                     }
             }

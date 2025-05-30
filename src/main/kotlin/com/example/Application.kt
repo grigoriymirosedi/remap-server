@@ -1,5 +1,7 @@
 package com.example
 
+import com.example.database.security.configureSecurity
+import com.example.database.security.configureSecurityRouting
 import com.example.features.event.configureEventRouting
 import com.example.plugins.configureSerialization
 import com.example.features.recycle_point.configureRecyclePointRouting
@@ -16,12 +18,15 @@ fun main(args: Array<String>) {
         password = System.getenv("POSTGRES_PASSWORD"),
     )
 
-    embeddedServer(Netty, port = System.getenv("PORT").toInt(),module = Application::module)
+    embeddedServer(Netty,
+        host = "192.168.0.108", port = System.getenv("PORT").toInt(),module = Application::module)
         .start(wait = true)
 }
 
 fun Application.module() {
+    configureSecurity()
     configureSerialization()
     configureRecyclePointRouting()
     configureEventRouting()
+    configureSecurityRouting()
 }
