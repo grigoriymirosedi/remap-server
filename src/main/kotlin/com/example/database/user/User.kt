@@ -2,6 +2,7 @@ package com.example.database.user
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.database.collected_items.CollectedItems
+import com.example.database.recycle_point.RecyclePoint
 import com.example.database.requests.Requests
 import com.example.database.tips.Tips
 import com.example.features.user.CollectedItem
@@ -52,13 +53,17 @@ object User: Table("users") {
     fun fetchUserInfoById(userId: String): UserModel? {
         return try {
             transaction {
-                val requests: List<RequestModel> = Requests.selectAll()
+                val requests: List<RequestModel> = RecyclePoint.selectAll()
+                    .orderBy(RecyclePoint.created_at to SortOrder.DESC)
                     .mapNotNull {
-                        if (it[Requests.user_id].toString() == userId) {
+                        if (it[RecyclePoint.user_id].toString() == userId) {
                             RequestModel(
-                                requestNumber = it[Requests.request_number],
-                                title = it[Requests.title],
-                                status = it[Requests.status]
+                                requestNumber = it[RecyclePoint.recycle_point_id],
+                                title = it[RecyclePoint.name],
+                                address = it[RecyclePoint.address],
+                                category = "Пункт переработки",
+                                status = it[RecyclePoint.moderation_status],
+                                createdAt = it[RecyclePoint.created_at]
                             )
                         } else {
                             null // обязательно указать null для mapNotNull

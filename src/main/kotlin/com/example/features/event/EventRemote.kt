@@ -2,6 +2,7 @@ package com.example.features.event
 
 import com.example.database.core.serializers.LocalDateSerializer
 import com.example.database.core.serializers.LocalTimeSerializer
+import com.example.database.core.serializers.RuLocalDateSerializer
 import com.example.database.event.Event
 import com.example.database.event.EventDTO
 import kotlinx.serialization.Serializable
@@ -15,7 +16,7 @@ data class EventResponse(
     val title: String,
     val description: String,
     val image_url: String,
-    @Serializable(with = LocalDateSerializer::class)
+    @Serializable(with = RuLocalDateSerializer::class)
     val date: LocalDate,
     @Serializable(with = LocalTimeSerializer::class)
     val time: LocalTime,

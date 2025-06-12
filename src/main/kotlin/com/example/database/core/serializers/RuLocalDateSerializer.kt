@@ -9,16 +9,16 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Serializer(forClass = LocalDate::class)
-class LocalDateSerializer : KSerializer<LocalDate> {
+class RuLocalDateSerializer : KSerializer<LocalDate> {
     private val formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
-    private val ruFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private val ruFormatter = DateTimeFormatter.ofPattern("d MMMM", Locale("ru"))
 
     override fun serialize(encoder: Encoder, value: LocalDate) {
         encoder.encodeString(value.format(ruFormatter))
     }
 
     override fun deserialize(decoder: Decoder): LocalDate {
-        return LocalDate.parse(decoder.decodeString(), formatter)
+        return LocalDate.parse(decoder.decodeString(), ruFormatter)
     }
 }

@@ -11,6 +11,4 @@ object Requests: Table("requests") {
     val title = Requests.text("title")
     val status = Requests.byte("status")
     val created_at = Requests.time("created_at")
-
-
 }

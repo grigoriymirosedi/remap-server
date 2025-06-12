@@ -52,6 +52,11 @@ data class RecyclePointResponse(
 )
 
 @Serializable
+data class RecyclePointIdResponse(
+    val recyclePointId: String,
+)
+
+@Serializable
 data class AllDataResponse(
     val username: String,
     val points: Int,

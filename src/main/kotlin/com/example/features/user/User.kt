@@ -1,14 +1,14 @@
 package com.example.features.user
 
 import com.example.database.collected_items.CollectedItems
+import com.example.database.core.serializers.LocalDateSerializer
 import com.example.database.core.serializers.LocalTimeSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
 import java.io.Serial
 import java.net.Authenticator.RequestorType
 import java.sql.Timestamp
-import java.time.Instant
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -59,7 +59,11 @@ data class AuthResponse(
 data class RequestModel(
     val requestNumber: String,
     val title: String,
-    val status: Byte
+    val address: String,
+    val category: String,
+    val status: Byte,
+    @Serializable(with = LocalDateSerializer::class)
+    val createdAt: LocalDate
 )
 
 @Serializable
