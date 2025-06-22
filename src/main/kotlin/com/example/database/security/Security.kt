@@ -12,13 +12,12 @@ import io.ktor.server.response.*
 import java.util.*
 
 fun Application.configureSecurity() {
-    val dotenv = dotenv()
     val jwtConfig = JwtConfig(
-        secret = dotenv["secret"],
-        issuer = dotenv["issuer"],
-        audience = dotenv["audience"],
-        realm = dotenv["realm"],
-        accessTokenExpiry = dotenv["accessTokenExpiry"].toLong()
+        secret = System.getenv("secret"),
+        issuer = System.getenv("issuer"),
+        audience = System.getenv("audience"),
+        realm = System.getenv("realm"),
+        accessTokenExpiry = System.getenv("accessTokenExpiry").toLong()
     )
 
     install(Authentication) {
