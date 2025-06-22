@@ -1,9 +1,12 @@
 FROM gradle:7-jdk11 AS build
 
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
+COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts gradle.properties /home/gradle/src/
+COPY --chown=gradle:gradle gradle /home/gradle/src/gradle
+RUN gradle dependencies --no-daemon
 
-RUN gradle buildFatJar --no-daemon || gradle buildFatJar --no-daemon --stacktrace
+COPY --chown=gradle:gradle . /home/gradle/src
+
+RUN gradle clean buildFatJar --no-daemon --stacktrace --info --scan
 
 FROM openjdk:11
 
