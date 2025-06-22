@@ -15,7 +15,7 @@ class LocalDateSerializer : KSerializer<LocalDate> {
     private val ruFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     override fun serialize(encoder: Encoder, value: LocalDate) {
-        encoder.encodeString(value.format(ruFormatter))
+        encoder.encodeString(value.format(formatter))
     }
 
     override fun deserialize(decoder: Decoder): LocalDate {

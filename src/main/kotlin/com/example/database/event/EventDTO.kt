@@ -13,21 +13,24 @@ data class EventDTO(
     val id: String,
     val title: String,
     val description: String,
-    val photo_url: String,
+    val photo_url: String?,
     @Serializable(with = RuLocalDateSerializer::class)
     val event_date: LocalDate,
     @Serializable(with = LocalTimeSerializer::class)
     val event_start_time: LocalTime,
     val event_location: String,
+    @Serializable(with = LocalDateSerializer::class)
+    val localDate: LocalDate
 )
 
 fun EventDTO.toEventResponse() = EventResponse (
     id = id,
     title = title,
     description = description,
-    image_url = photo_url,
+    image_url = photo_url ?: "",
     date = event_date,
     time = event_start_time,
     location = event_location,
+    localDate = localDate
 )
 

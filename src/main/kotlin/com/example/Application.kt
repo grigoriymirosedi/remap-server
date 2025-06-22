@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
     )
 
     embeddedServer(Netty,
-        host = "192.168.0.108", port = System.getenv("PORT").toInt(),module = Application::module)
+        host = "192.168.0.138", port = System.getenv("PORT").toInt(),module = Application::module)
         .start(wait = true)
 }
 

@@ -21,6 +21,8 @@ data class EventResponse(
     @Serializable(with = LocalTimeSerializer::class)
     val time: LocalTime,
     val location: String,
+    @Serializable(with = LocalDateSerializer::class)
+    val localDate: LocalDate
 )
 
 @Serializable
@@ -43,4 +45,5 @@ fun EventReceive.toEventDTO(): EventDTO = EventDTO(
     event_date = event_date,
     event_start_time = event_start_time,
     event_location = event_location,
+    localDate = LocalDate.now()
 )

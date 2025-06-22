@@ -15,7 +15,7 @@ object Event : Table("events") {
     val id = Event.text("event_id")
     val title = Event.text("title")
     val description = Event.text("description")
-    val image_url = Event.text("image_url")
+    val image_url = Event.text("image_url").nullable()
     val date = Event.date("date")
     val time = Event.time("time")
     val location = Event.text("location")
@@ -49,6 +49,7 @@ object Event : Table("events") {
                             event_date = it[Event.date],
                             event_start_time = it[Event.time],
                             event_location = it[Event.location],
+                            localDate = it[Event.date]
                         )
                     }
             }
