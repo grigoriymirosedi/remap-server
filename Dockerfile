@@ -1,10 +1,12 @@
-FROM gradle:8-jdk11 AS build
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-RUN gradle buildFatJar --no-daemon
+FROM gradle:latest AS BUILD_STAGE
+WORKDIR /tmp
+COPY gradle gradle
+COPY build.gradle.kts gradle.properties settings.gradle.kts gradlew ./
+COPY src src
+RUN ./gradlew --no-daemon buildFatJar
 
-FROM openjdk:11
+FROM openjdk:17-jdk-slim
 EXPOSE 8080:8080
 RUN mkdir /app
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/remap-server.jar
-ENTRYPOINT ["java","-jar","/app/remap-server.jar"]
+COPY --from=BUILD_STAGE /tmp/build/libs/*-all.jar /app/ktor-server.jar
+ENTRYPOINT ["java","-Xlog:gc+init","-XX:+PrintCommandLineFlags","-jar","/app/ktor-server.jar"]
